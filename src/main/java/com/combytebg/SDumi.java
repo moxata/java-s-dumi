@@ -6,7 +6,7 @@ import java.util.List;
 final public class SDumi {
 
     public static String sDumiCialaChast(double suma) {
-        suma = Math.floor(suma);
+        suma = (long) suma;
         if (suma == 0) {
             return "нула";
         }
@@ -40,7 +40,7 @@ final public class SDumi {
             } else {
 
                 tri.res = STOTICI.get(ctoi(s.charAt(0)));
-                int dvu = stoi(s.substring(0, 2));
+                int dvu = stoi(s.substring(1));
                 if (dvu > 0) {
                     if (s.charAt(1) <= '1') {
                         tri.res += " и " + EDINICI(dvu, EXP_TO_ROD.get(tri.exp));
@@ -85,7 +85,7 @@ final public class SDumi {
     }
 
     public static String sDumi(double suma, String valuta) {
-        String s = sDumiCialaChast(Math.floor(suma)) + " " + valuta;
+        String s = sDumiCialaChast((long) suma) + " " + valuta;
         String stot = frac(suma);
         stot = padLeftZeros(stot, 2);
         s += " и " + stot + " ст.";
@@ -145,7 +145,7 @@ final public class SDumi {
 
     private static List<TriItem> buildTriList(double suma) {
         suma = Math.abs(suma);
-        String zeroPadded = padLeftZeros(Double.toString(suma), 15);
+        String zeroPadded = padLeftZeros(Long.toString((long) suma), 15);
         List<TriItem> triList = new ArrayList<>();
         int triLength = (int)Math.floor((double)zeroPadded.length() / 3);
         TriItem newTri;
@@ -194,7 +194,7 @@ final public class SDumi {
     }
 
     private static String frac(double suma) {
-        StringBuilder sSuma = new StringBuilder(Double.toString(suma));
+        StringBuilder sSuma = new StringBuilder(String.format("%.2f", suma));
         int dot = sSuma.toString().indexOf('.');
         if (dot != -1) {
             sSuma = new StringBuilder(sSuma.substring(dot + 1));
