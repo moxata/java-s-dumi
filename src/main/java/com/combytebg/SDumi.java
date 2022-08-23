@@ -5,6 +5,103 @@ import java.util.List;
 
 final public class SDumi {
 
+    public static String sDumiCialaChast(double suma) {
+        suma = Math.floor(suma);
+        if (suma == 0) {
+            return "нула";
+        }
+
+        boolean isPlus = (suma >= 0);
+        List<TriItem> triList = buildTriList(suma);
+
+        for (TriItem tri : triList) {
+            String s = tri.s;
+
+            if (s.charAt(0) == '0') {
+
+                if (s.charAt(1) <= '1') {
+
+                    if (tri.exp == 3 && !tri.isPlural) {
+                        // не се казва "една хиляда"
+                        tri.res = "";
+                    } else {
+                        tri.res = EDINICI(stoi(s), EXP_TO_ROD.get(tri.exp));
+                    }
+
+                } else {
+
+                    tri.res = DESETICI.get(ctoi(s.charAt(1)));
+                    if (s.charAt(2) != '0') {
+                        tri.res += " и " + EDINICI(ctoi(s.charAt(2)), EXP_TO_ROD.get(tri.exp));
+                        tri.hasI = true;
+                    }
+                }
+
+            } else {
+
+                tri.res = STOTICI.get(ctoi(s.charAt(0)));
+                int dvu = stoi(s.substring(0, 2));
+                if (dvu > 0) {
+                    if (s.charAt(1) <= '1') {
+                        tri.res += " и " + EDINICI(dvu, EXP_TO_ROD.get(tri.exp));
+                        tri.hasI = true;
+                    } else {
+                        if (s.charAt(2) == '0') {
+                            tri.res += " и";
+                            tri.hasI = true;
+                        }
+                        tri.res += " " + DESETICI.get(ctoi(s.charAt(1)));
+                        if (s.charAt(2) != '0') {
+                            tri.res += " и " + EDINICI(ctoi(s.charAt(2)), EXP_TO_ROD.get(tri.exp));
+                            tri.hasI = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        StringBuilder res = new StringBuilder();
+        for (int i=0, len=triList.size(); i<len; i++) {
+            res.append(triList.get(i).res).append(" ");
+            int triExp = (int) Math.floor((double) triList.get(i).exp / 3);
+            if (triExp >= 1) {
+                int isPluralI = triList.get(i).isPlural ? 1 : 0;
+                res.append(TRIEXPONENTS.get(triExp).get(isPluralI)).append(" ");
+            }
+            if (i == triList.size()-2 && !triList.get(i+1).hasI) {
+                res.append("и ");
+            }
+        }
+        res = new StringBuilder(res.toString().trim());
+        if (!isPlus) {
+            res.insert(0, "минус ");
+        }
+
+        return res.toString();
+    }
+
+    public static String sDumi(double suma) {
+        return sDumi(suma, "лв.");
+    }
+
+    public static String sDumi(double suma, String valuta) {
+        String s = sDumiCialaChast(Math.floor(suma)) + " " + valuta;
+        String stot = frac(suma);
+        stot = padLeftZeros(stot, 2);
+        s += " и " + stot + " ст.";
+        // first char should be upper case
+        s =  Character.toUpperCase(s.charAt(0)) + s.substring(1);
+        return s;
+    }
+
+    private static int ctoi(char ch) {
+        return Integer.parseInt(String.valueOf(ch), 10);
+    }
+
+    private static int stoi(String s) {
+        return Integer.parseInt(s, 10);
+    }
+
     private enum Rod {
         MUJKI,
         JENSKI,
@@ -48,7 +145,7 @@ final public class SDumi {
 
     private static List<TriItem> buildTriList(double suma) {
         suma = Math.abs(suma);
-        String zeroPadded = padLeftZeros(Double.toString(suma), 15, '0');
+        String zeroPadded = padLeftZeros(Double.toString(suma), 15);
         List<TriItem> triList = new ArrayList<>();
         int triLength = (int)Math.floor((double)zeroPadded.length() / 3);
         TriItem newTri;
@@ -89,14 +186,24 @@ final public class SDumi {
         }
     }
 
-    private static String padLeftZeros(String inputString, int length, char ch) {
+    private static String padLeftZeros(String inputString, int length) {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.valueOf(ch).repeat(Math.max(0, length)));
+        sb.append(String.valueOf('0').repeat(Math.max(0, length)));
 
         return sb.substring(inputString.length()) + inputString;
     }
 
-    void alaBala() {
-        ci.add("sdf");
+    private static String frac(double suma) {
+        StringBuilder sSuma = new StringBuilder(Double.toString(suma));
+        int dot = sSuma.toString().indexOf('.');
+        if (dot != -1) {
+            sSuma = new StringBuilder(sSuma.substring(dot + 1));
+            while (sSuma.length() < 2) {
+                sSuma.append('0');
+            }
+            return sSuma.toString();
+        } else {
+            return "0";
+        }
     }
 }
