@@ -1,6 +1,7 @@
 package com.combytebg;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 final public class SDumi {
@@ -108,31 +109,31 @@ final public class SDumi {
         X
     }
 
-    private static final List<Rod> EXP_TO_ROD = List.of(Rod.MUJKI, Rod.X, Rod.X,
+    private static final List<Rod> EXP_TO_ROD = Arrays.asList(Rod.MUJKI, Rod.X, Rod.X,
             Rod.JENSKI, Rod.X, Rod.X,
             Rod.MUJKI, Rod.X, Rod.X,
             Rod.MUJKI, Rod.X, Rod.X,
             Rod.MUJKI);
 
-    private static final List<String> ci = List.of("нула", "един", "две",
+    private static final List<String> ci = Arrays.asList("нула", "един", "две",
             "три", "четири", "пет", "шест", "седем", "осем", "девет", "десет",
             "единадесет", "дванадесет", "тринадесет", "четиринадесет", "петнадесет",
             "шестнадесет", "седемнадесет", "осемнадесет", "деветнадесет");
 
-    private static final List<String> DESETICI = List.of("padding", "padding",
+    private static final List<String> DESETICI = Arrays.asList("padding", "padding",
             "двадесет", "тридесет", "четиридесет", "петдесет", "шестдесет",
             "седемдесет", "осемдесет", "деветдесет");
 
-    private static final List<String> STOTICI = List.of("padding",
+    private static final List<String> STOTICI = Arrays.asList("padding",
             "сто", "двеста" ,"триста", "четиристотин", "петстотин", "шестстотин",
             "седемстотин", "осемстотин", "деветстотин");
 
-    private static final List<List<String>> TRIEXPONENTS = List.of(
-            List.of("padding"),
-            List.of("хиляда", "хиляди"),
-            List.of("милион", "милиона"),
-            List.of("милиард", "милиарда"),
-            List.of("трилион", "трилиона")
+    private static final List<List<String>> TRIEXPONENTS = Arrays.asList(
+            Arrays.asList("padding", "padding"),
+            Arrays.asList("хиляда", "хиляди"),
+            Arrays.asList("милион", "милиона"),
+            Arrays.asList("милиард", "милиарда"),
+            Arrays.asList("трилион", "трилиона")
     );
 
     private static class TriItem {
@@ -188,7 +189,9 @@ final public class SDumi {
 
     private static String padLeftZeros(String inputString, int length) {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.valueOf('0').repeat(Math.max(0, length)));
+        for (int i=0; i<length; i++) {
+            sb.append('0');
+        }
 
         return sb.substring(inputString.length()) + inputString;
     }
