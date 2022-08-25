@@ -1,5 +1,6 @@
 package com.combytebg;
 
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -198,7 +199,8 @@ final public class SDumi {
 
     private static String frac(double suma) {
         StringBuilder sSuma = new StringBuilder(String.format("%.2f", suma));
-        int dot = sSuma.toString().indexOf('.');
+        char decimalSep = DecimalFormatSymbols.getInstance().getDecimalSeparator();
+        int dot = sSuma.toString().indexOf(decimalSep);
         if (dot != -1) {
             sSuma = new StringBuilder(sSuma.substring(dot + 1));
             while (sSuma.length() < 2) {
