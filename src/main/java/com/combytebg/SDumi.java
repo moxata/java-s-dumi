@@ -7,7 +7,7 @@ import java.util.List;
 
 final public class SDumi {
 
-    public static String sDumiCialaChast(double suma) {
+    public static String sDumiCialaChast(double suma, Rod rod) {
         suma = (long) suma;
         if (suma == 0) {
             return "нула";
@@ -87,7 +87,12 @@ final public class SDumi {
     }
 
     public static String sDumi(double suma, String valuta) {
-        String s = sDumiCialaChast((long) suma) + " " + valuta;
+        Rod rod = Rod.X;
+        if (valuta.equals("лев") || valuta.equals("лева") || valuta.equals("лв.")) {
+            rod = Rod.MUJKI;
+        }
+
+        String s = sDumiCialaChast((long) suma, rod) + " " + valuta;
         String stot = frac(suma);
         stot = padLeftZeros(stot, 2);
         s += " и " + stot + " ст.";
@@ -172,12 +177,14 @@ final public class SDumi {
             case 1: {
                 if (rod == Rod.JENSKI) {
                     return "една";
-                } else {
+                } else if (rod == Rod.MUJKI) {
                     return "един";
+                } else {
+                    return "едно";
                 }
             }
             case 2: {
-                if (rod == Rod.JENSKI) {
+                if (rod == Rod.JENSKI || rod == Rod.X) {
                     return "две";
                 } else {
                     return "два";
